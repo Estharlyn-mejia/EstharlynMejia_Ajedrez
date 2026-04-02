@@ -1,18 +1,19 @@
-## Getting Started
+# EstharlynMejia_Ajedrez
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Proyecto de ajedrez desarrollado en JavaFX.
 
-## Folder Structure
+## Descripción
+Este proyecto implementa un juego de ajedrez con interfaz gráfica utilizando JavaFX.
 
-The workspace contains two folders by default, where:
+## Estructura
+- src: código fuente
+- resources: imágenes del tablero y piezas
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Actaulización
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## Estructura
+- Ahora se agrego las imagenes de las fichas, tanto blancas, como negras
+- se ajusto a panel, donde se encuentran el tablero, ya que no lo especifique
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+## Complicación
+- el compilador no podia encontrar las imagenes y la ubicacion de la mismas. 

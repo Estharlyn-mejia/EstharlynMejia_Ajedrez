@@ -7,10 +7,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<Pane prefHeight="800.0" prefWidth="800.0"
+      xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="TableroController">
 
    <children>
 
+      <!-- TABLERO -->
       <ImageView fx:id="tablero" fitHeight="740.0" fitWidth="740.0" layoutX="30.0" layoutY="30.0" preserveRatio="true">
 
          <image>
@@ -19,6 +23,14 @@
 
       </ImageView>
 
+      
+      <Pane fx:id="capaPiezas"
+            layoutX="30.0"
+            layoutY="30.0"
+            prefWidth="740.0"
+            prefHeight="740.0" />
+
+      
       <Button fx:id="btnRendirse" layoutX="636.0" layoutY="32.0" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: red; -fx-text-fill: white;" text="Rendirse">
 
          <font>
@@ -27,6 +39,7 @@
 
       </Button>
 
+      
       <Label fx:id="turno" layoutX="66.0" layoutY="34.0" text="Turno: Blanco" textFill="WHITE">
 
          <font>
