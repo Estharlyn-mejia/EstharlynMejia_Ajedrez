@@ -9,8 +9,7 @@ public class App extends Application {
     
     @Override
     public void start(Stage stage)throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Tablero.fxml"));
-        Parent root = loader.load();
+        Parent root = FXMLLoader.load(getClass().getResource("/VentanaInicio.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Chess Game");
