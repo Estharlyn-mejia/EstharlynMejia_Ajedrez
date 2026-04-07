@@ -29,3 +29,19 @@ Este proyecto implementa un juego de ajedrez con interfaz gráfica utilizando Ja
 ## Complicaciones
 - Desde la ultima actualizacion buscando como se le pone el audio, y intendo vincular todo.
 - Y varios problemas para encontrar la direccion del audio.
+
+
+## Actualización 3
+
+## Estructura
+- Se agrego la posibilidad del que el peon se pueda mover y comer otras piezas, tambien se bloquea y no puede comer en vertical
+- Se le agrego un logo al menú de inicio
+- Ahora marca si es negro o blanco, o sea, ahora se juega por turno, ademas tambien marca donde se puede mover
+- Ahora tiene sonido al  mover una pieza(peón)
+
+## Complicaciones
+
+- que no se complico, con decir que hasta la URL del sonido, que no tenia nada que ver, se perdio y no lo queria encontrar
+- Implementar nuevo metodo
+- Menejar movimientos usando los ejes X y Y
+- Ajustar el tablero, para que no pierda la forma
