@@ -36,8 +36,8 @@ public class Tablero {
         tablero[7][2] = "A"; tablero[7][5] = "A";
         tablero[0][3] = "q";
         tablero[7][3] = "Q";
-        tablero[0][4] = "k";
-        tablero[7][4] = "K";
+        tablero[0][4] = "r";
+        tablero[7][4] = "R";
     }
 
     // Método para inicializar el tablero visualmente
@@ -84,18 +84,26 @@ public class Tablero {
     // Método para manejar el clic en una pieza y mostrar los posibles movimientos
     private void clickPieza(ImageView pieza, int fila, int columna) {
         String tipo = tablero[fila][columna];
+
         if (piezaSeleccionada == null) {
-            if (!"P".equals(tipo) && !"p".equals(tipo)) {
+            if (!"P".equals(tipo) && !"p".equals(tipo) &&
+                !"T".equals(tipo) && !"t".equals(tipo) &&
+                !"C".equals(tipo) && !"c".equals(tipo) &&
+                !"A".equals(tipo) && !"a".equals(tipo) &&
+                !"R".equals(tipo) && !"r".equals(tipo) &&
+                !"Q".equals(tipo) && !"q".equals(tipo)) {
                 return;
             }
-            if ((turnoBlanco && !"P".equals(tipo)) || (!turnoBlanco && !"p".equals(tipo))) {
+            if ((turnoBlanco && !"P".equals(tipo) && !"T".equals(tipo) && !"C".equals(tipo) &&
+                !"A".equals(tipo) && !"R".equals(tipo) && !"Q".equals(tipo)) ||
+                (!turnoBlanco && !"p".equals(tipo) && !"t".equals(tipo) && !"c".equals(tipo) &&
+                !"a".equals(tipo) && !"r".equals(tipo) && !"q".equals(tipo))) {
                 return;
             }
             seleccionarPieza(pieza, fila, columna);
             return;
         }
 
-        // Si se hace clic en la misma pieza seleccionada, se deselecciona
         if (pieza == piezaSeleccionada) {
             piezaSeleccionada.setOpacity(1.0);
             piezaSeleccionada = null;
@@ -103,16 +111,17 @@ public class Tablero {
             return;
         }
 
-        // Si se hace clic en otra pieza del mismo color, se cambia la selección
         String tipoClic = tablero[fila][columna];
-        if ((turnoBlanco && "P".equals(tipoClic)) || (!turnoBlanco && "p".equals(tipoClic))) {
+        if ((turnoBlanco && ("P".equals(tipoClic) || "T".equals(tipoClic) || "C".equals(tipoClic) ||
+                            "A".equals(tipoClic) || "R".equals(tipoClic) || "Q".equals(tipoClic))) ||
+            (!turnoBlanco && ("p".equals(tipoClic) || "t".equals(tipoClic) || "c".equals(tipoClic) ||
+                            "a".equals(tipoClic) || "r".equals(tipoClic) || "q".equals(tipoClic)))) {
             piezaSeleccionada.setOpacity(1.0);
             limpiarPuntos();
             seleccionarPieza(pieza, fila, columna);
             return;
         }
 
-        // Si se hace clic en una pieza del color contrario o en una casilla vacía, se intenta mover la pieza seleccionada
         piezaSeleccionada.setOpacity(1.0);
         piezaSeleccionada = null;
         limpiarPuntos();
@@ -123,7 +132,7 @@ public class Tablero {
         piezaSeleccionada = pieza;
         filaSeleccionada = fila;
         colSeleccionada = columna;
-        piezaSeleccionada.setOpacity(0.7);
+        piezaSeleccionada.setOpacity(1.0);
         mostrarPosiblesMovimientos(fila, columna);
     }
 
@@ -131,33 +140,27 @@ public class Tablero {
     private void mostrarPosiblesMovimientos(int filaOrigen, int columnaOrigen) {
         limpiarPuntos();
         String pieza = tablero[filaOrigen][columnaOrigen];
-        if (!"P".equals(pieza) && !"p".equals(pieza)) {
+        if (pieza == null) {
             return;
         }
 
-        // Lógica para mostrar los movimientos posibles de un peón
         if ("P".equals(pieza)) {
             int f1 = filaOrigen - 1;
-            // Verificar si el peón puede avanzar una casilla
             if (f1 >= 0 && tablero[f1][columnaOrigen] == null) {
                 crearPunto(columnaOrigen, f1, filaOrigen, columnaOrigen);
             }
-            // Verificar si el peón está en su posición inicial y puede avanzar dos casillas
             if (filaOrigen == 6 && tablero[5][columnaOrigen] == null && tablero[4][columnaOrigen] == null) {
                 crearPunto(columnaOrigen, 4, filaOrigen, columnaOrigen);
             }
-            // Verificar si el peón puede capturar una pieza enemiga en diagonal a la izquierda
-            if (f1 >= 0 && columnaOrigen - 1 >= 0 && tablero[f1][columnaOrigen - 1] != null && tablero[f1][columnaOrigen - 1].equals(tablero[f1][columnaOrigen - 1].toLowerCase())) {
+            if (f1 >= 0 && columnaOrigen - 1 >= 0 && tablero[f1][columnaOrigen - 1] != null &&
+                    tablero[f1][columnaOrigen - 1].equals(tablero[f1][columnaOrigen - 1].toLowerCase())) {
                 crearPunto(columnaOrigen - 1, f1, filaOrigen, columnaOrigen);
             }
-            // Verificar si el peón puede capturar una pieza enemiga en diagonal a la derecha
-            if (f1 >= 0 && columnaOrigen + 1 < 8 && tablero[f1][columnaOrigen + 1] != null && tablero[f1][columnaOrigen + 1].equals(tablero[f1][columnaOrigen + 1].toLowerCase())) {
+            if (f1 >= 0 && columnaOrigen + 1 < 8 && tablero[f1][columnaOrigen + 1] != null &&
+                    tablero[f1][columnaOrigen + 1].equals(tablero[f1][columnaOrigen + 1].toLowerCase())) {
                 crearPunto(columnaOrigen + 1, f1, filaOrigen, columnaOrigen);
             }
-        }
-
-        // Lógica para mostrar los movimientos posibles de un peón negro
-        if ("p".equals(pieza)) {
+        } else if ("p".equals(pieza)) {
             int f1 = filaOrigen + 1;
             if (f1 < 8 && tablero[f1][columnaOrigen] == null) {
                 crearPunto(columnaOrigen, f1, filaOrigen, columnaOrigen);
@@ -165,11 +168,123 @@ public class Tablero {
             if (filaOrigen == 1 && tablero[2][columnaOrigen] == null && tablero[3][columnaOrigen] == null) {
                 crearPunto(columnaOrigen, 3, filaOrigen, columnaOrigen);
             }
-            if (f1 < 8 && columnaOrigen - 1 >= 0 && tablero[f1][columnaOrigen - 1] != null && tablero[f1][columnaOrigen - 1].equals(tablero[f1][columnaOrigen - 1].toUpperCase())) {
+            if (f1 < 8 && columnaOrigen - 1 >= 0 && tablero[f1][columnaOrigen - 1] != null &&
+                    tablero[f1][columnaOrigen - 1].equals(tablero[f1][columnaOrigen - 1].toUpperCase())) {
                 crearPunto(columnaOrigen - 1, f1, filaOrigen, columnaOrigen);
             }
-            if (f1 < 8 && columnaOrigen + 1 < 8 && tablero[f1][columnaOrigen + 1] != null && tablero[f1][columnaOrigen + 1].equals(tablero[f1][columnaOrigen + 1].toUpperCase())) {
+            if (f1 < 8 && columnaOrigen + 1 < 8 && tablero[f1][columnaOrigen + 1] != null &&
+                    tablero[f1][columnaOrigen + 1].equals(tablero[f1][columnaOrigen + 1].toUpperCase())) {
                 crearPunto(columnaOrigen + 1, f1, filaOrigen, columnaOrigen);
+            }
+        } else if ("T".equals(pieza) || "t".equals(pieza)) {
+            boolean esBlanca = "T".equals(pieza);
+            int[][] direcciones = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+            for (int[] dir : direcciones) {
+                int f = filaOrigen + dir[0];
+                int c = columnaOrigen + dir[1];
+                while (f >= 0 && f < 8 && c >= 0 && c < 8) {
+                    String destino = tablero[f][c];
+                    if (destino == null) {
+                        crearPunto(c, f, filaOrigen, columnaOrigen);
+                    } else {
+                        if (esBlanca && destino.equals(destino.toLowerCase())) {
+                            crearPunto(c, f, filaOrigen, columnaOrigen);
+                        } else if (!esBlanca && destino.equals(destino.toUpperCase())) {
+                            crearPunto(c, f, filaOrigen, columnaOrigen);
+                        }
+                        break;
+                    }
+                    f += dir[0];
+                    c += dir[1];
+                }
+            }
+        } else if ("C".equals(pieza) || "c".equals(pieza)) {
+            boolean esBlanca = "C".equals(pieza);
+            // Movimientos posibles del caballo
+            int[][] movimientos = {
+                {-2, -1}, {-2, 1}, {2, -1}, {2, 1},
+                {-1, -2}, {-1, 2}, {1, -2}, {1, 2}
+            };
+            for (int[] mov : movimientos) {
+                int f = filaOrigen + mov[0];
+                int c = columnaOrigen + mov[1];
+                if (f >= 0 && f < 8 && c >= 0 && c < 8) {
+                    String destino = tablero[f][c];
+                    if (destino == null ||
+                        (esBlanca && destino.equals(destino.toLowerCase())) ||
+                        (!esBlanca && destino.equals(destino.toUpperCase()))) {
+                        crearPunto(c, f, filaOrigen, columnaOrigen);
+                    }
+                }
+            }
+        } else if ("A".equals(pieza) || "a".equals(pieza)) {
+            boolean esBlanca = "A".equals(pieza);
+            // Movimientos posibles del alfil
+            int[][] direcciones = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+            for (int[] dir : direcciones) {
+                int f = filaOrigen + dir[0];
+                int c = columnaOrigen + dir[1];
+                while (f >= 0 && f < 8 && c >= 0 && c < 8) {
+                    String destino = tablero[f][c];
+                    if (destino == null) {
+                        crearPunto(c, f, filaOrigen, columnaOrigen);
+                    } else {
+                        if (esBlanca && destino.equals(destino.toLowerCase())) {
+                            crearPunto(c, f, filaOrigen, columnaOrigen);
+                        } else if (!esBlanca && destino.equals(destino.toUpperCase())) {
+                            crearPunto(c, f, filaOrigen, columnaOrigen);
+                        }
+                        break;
+                    }
+                    f += dir[0];
+                    c += dir[1];
+                }
+            }
+        } else if ("R".equals(pieza) || "r".equals(pieza)) {
+            boolean esBlanca = "R".equals(pieza);
+            int[][] movimientos = {
+                {-1, -1}, {-1, 0}, {-1, 1},
+                {0, -1},           {0, 1},
+                {1, -1},  {1, 0},  {1, 1}
+            };
+            for (int[] mov : movimientos) {
+                int f = filaOrigen + mov[0];
+                int c = columnaOrigen + mov[1];
+                if (f >= 0 && f < 8 && c >= 0 && c < 8) {
+                    String destino = tablero[f][c];
+                    if (destino == null ||
+                        (esBlanca && destino.equals(destino.toLowerCase())) ||
+                        (!esBlanca && destino.equals(destino.toUpperCase()))) {
+                        crearPunto(c, f, filaOrigen, columnaOrigen);
+                    }
+                }
+            }
+        }
+        else if ("Q".equals(pieza) || "q".equals(pieza)) {
+            boolean esBlanca = "Q".equals(pieza);
+            // Movimientos posibles de la reina (combinación de torre y alfil)
+            int[][] direcciones = {
+                {-1, 0}, {1, 0}, {0, -1}, {0, 1},
+                {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+            };
+            for (int[] dir : direcciones) {
+                int f = filaOrigen + dir[0];
+                int c = columnaOrigen + dir[1];
+                while (f >= 0 && f < 8 && c >= 0 && c < 8) {
+                    String destino = tablero[f][c];
+                    if (destino == null) {
+                        crearPunto(c, f, filaOrigen, columnaOrigen);
+                    } else {
+                        if (esBlanca && destino.equals(destino.toLowerCase())) {
+                            crearPunto(c, f, filaOrigen, columnaOrigen);
+                        } else if (!esBlanca && destino.equals(destino.toUpperCase())) {
+                            crearPunto(c, f, filaOrigen, columnaOrigen);
+                        }
+                        break;
+                    }
+                    f += dir[0];
+                    c += dir[1];
+                }
             }
         }
     }
@@ -188,7 +303,16 @@ public class Tablero {
         punto.setLayoutY(137 + fila * TAM + (TAM - 20) / 2.0);
         punto.setOpacity(0.8);
         punto.setOnMouseClicked(e -> {
-            if (puedeMoverPeon(fO, cO, fila, columna)) {
+            String pieza = tablero[fO][cO];
+            
+            if (
+                (("P".equals(pieza) || "p".equals(pieza)) && puedeMoverPeon(fO, cO, fila, columna)) ||
+                (("T".equals(pieza) || "t".equals(pieza)) && puedeMoverTorre(fO, cO, fila, columna)) ||
+                (("C".equals(pieza) || "c".equals(pieza)) && puedeMoverCaballo(fO, cO, fila, columna)) ||
+                (("A".equals(pieza) || "a".equals(pieza)) && puedeMoverAlfil(fO, cO, fila, columna)) ||
+                (("R".equals(pieza) || "r".equals(pieza)) && puedeMoverRey(fO, cO, fila, columna)) ||
+                (("Q".equals(pieza) || "q".equals(pieza)) && puedeMoverReina(fO, cO, fila, columna))
+            ) {
                 mover(fO, cO, fila, columna);
                 Audio.reproducirEfecto("/resources/audio/SonidoPiesa.mp3");
                 cambiarTurno();
@@ -212,7 +336,7 @@ public class Tablero {
         puntos.clear();
     }
 
-    // Método para cambiar el turno entre
+    // Método para cambiar el turno entre jugadores
     private void cambiarTurno() {
         turnoBlanco = !turnoBlanco;
         actualizarTurno();
@@ -279,6 +403,139 @@ public class Tablero {
             }
         }
         return false;
+    }
+
+    private boolean puedeMoverTorre(int fO, int cO, int fD, int cD) {
+        if (fO != fD && cO != cD) {
+            return false;
+        }
+
+        int df = Integer.compare(fD, fO);
+        int dc = Integer.compare(cD, cO);
+        int f = fO + df;
+        int c = cO + dc;
+        while (f != fD || c != cD) {
+            if (tablero[f][c] != null) {
+                return false;
+            }
+            f += df;
+            c += dc;
+        }
+
+        String destino = tablero[fD][cD];
+        if (destino == null) {
+            return true;
+        }
+
+        boolean esBlanca = "T".equals(tablero[fO][cO]);
+        return esBlanca ? destino.equals(destino.toLowerCase()) : destino.equals(destino.toUpperCase());
+    }
+
+    private boolean puedeMoverCaballo(int fO, int cO, int fD, int cD) {
+        int df = Math.abs(fD - fO);
+        int dc = Math.abs(cD - cO);
+        if (!((df == 2 && dc == 1) || (df == 1 && dc == 2))) {
+            return false;
+        }
+
+        String destino = tablero[fD][cD];
+        if (destino == null) {
+            return true;
+        }
+
+        boolean esBlanca = "C".equals(tablero[fO][cO]);
+        return esBlanca ? destino.equals(destino.toLowerCase()) : destino.equals(destino.toUpperCase());
+    }
+
+    private boolean puedeMoverAlfil(int fO, int cO, int fD, int cD) {
+        int df = Math.abs(fD - fO);
+        int dc = Math.abs(cD - cO);
+        if (df != dc) {
+            return false;
+        }
+
+        int dfDir = Integer.compare(fD, fO);
+        int dcDir = Integer.compare(cD, cO);
+
+        int f = fO + dfDir;
+        int c = cO + dcDir;
+        while (f != fD && c != cD) {
+            if (tablero[f][c] != null) {
+                return false;
+            }
+            f += dfDir;
+            c += dcDir;
+        }
+
+        String destino = tablero[fD][cD];
+        if (destino == null) {
+            return true;
+        }
+
+        boolean esBlanca = "A".equals(tablero[fO][cO]);
+        return esBlanca ? destino.equals(destino.toLowerCase()) : destino.equals(destino.toUpperCase());
+    }
+    // Método para verificar si un movimiento de rey es válido según las reglas del ajedrez
+    private boolean puedeMoverRey(int fO, int cO, int fD, int cD) {
+        int df = Math.abs(fD - fO);
+        int dc = Math.abs(cD - cO);
+        if (df > 1 || dc > 1) {
+            return false;
+        }
+
+        String destino = tablero[fD][cD];
+        if (destino == null) {
+            return true;
+        }
+
+        boolean esBlanca = "R".equals(tablero[fO][cO]);
+        return esBlanca ? destino.equals(destino.toLowerCase()) : destino.equals(destino.toUpperCase());
+    }
+
+    private boolean puedeMoverReina(int fO, int cO, int fD, int cD) {
+        String pieza = tablero[fO][cO];
+    
+        if (pieza == null) {
+            return false;
+        }
+    
+        boolean esBlanca = pieza.equals(pieza.toUpperCase());
+    
+        int df = fD - fO;
+        int dc = cD - cO;
+    
+        int absDf = Math.abs(df);
+        int absDc = Math.abs(dc);
+    
+        // Verificar si el movimiento es válido (recto o diagonal)
+        if (!(fO == fD || cO == cD || absDf == absDc)) {
+            return false;
+        }
+    
+        int pasoF = Integer.compare(fD, fO);
+        int pasoC = Integer.compare(cD, cO);
+    
+        int f = fO + pasoF;
+        int c = cO + pasoC;
+    
+        // Verificar que no haya piezas en el camino
+        while (f != fD || c != cD) {
+            if (tablero[f][c] != null) {
+                return false;
+            }
+            f += pasoF;
+            c += pasoC;
+        }
+    
+        // Verificar captura
+        String destino = tablero[fD][cD];
+        if (destino == null) {
+            return true;
+        }
+    
+        return esBlanca
+            ? destino.equals(destino.toLowerCase())
+            : destino.equals(destino.toUpperCase());
     }
 
     // Método para realizar el movimiento de una pieza en el tablero y actualizar la interfaz gráfica

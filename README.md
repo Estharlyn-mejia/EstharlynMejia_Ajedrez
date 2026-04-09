@@ -45,3 +45,19 @@ Este proyecto implementa un juego de ajedrez con interfaz gráfica utilizando Ja
 - Implementar nuevo metodo
 - Menejar movimientos usando los ejes X y Y
 - Ajustar el tablero, para que no pierda la forma
+
+## Actualización 4
+
+## Estructura
+- Solo se agrego una imagen a la pantalla de inicio
+- Se agregaron las funciones de las demas piezas que faltaban(Torre, Caballo, Alfil, Reina y rey)
+- Estan todas funcionando y capturando
+
+## Complicaciones
+
+- Ya se tenia la base, con el peon, y solo quedo agregarles cambios a lo que ya se tenia
+- Coliciones de piezas
+- No se repetaba el turno con algunas fichas
+- Se cambiaba una ficha y afectaba a todo lo creado
+- Se le agregaron los atributos de torre y alfil a reyna y me lo leía como falso, y decidi hacerla desde cero.
+- 

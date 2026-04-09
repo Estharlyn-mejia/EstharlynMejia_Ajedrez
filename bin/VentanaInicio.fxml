@@ -28,6 +28,16 @@
             <Image url="@resources/image/BlackCloverLogo.png" />
          </image>
       </ImageView>
+      <ImageView fitHeight="50.0" fitWidth="95.0" layoutY="343.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@resources/image/Liebe.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="50.0" fitWidth="88.0" layoutX="511.0" layoutY="343.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@resources/image/Liebe.png" />
+         </image>
+      </ImageView>
 
    </children>
 </Pane>
