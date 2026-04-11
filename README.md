@@ -60,4 +60,20 @@ Este proyecto implementa un juego de ajedrez con interfaz gráfica utilizando Ja
 - No se repetaba el turno con algunas fichas
 - Se cambiaba una ficha y afectaba a todo lo creado
 - Se le agregaron los atributos de torre y alfil a reyna y me lo leía como falso, y decidi hacerla desde cero.
-- 
+
+
+## Actualizacion 5
+
+## Estructura
+
+- Se agrego ventana final, jaque y jaquemate
+- se le dio las funciones de las ventanas de inicio
+- Se le pudo sonido al jaque
+- Falta la corronacion y el enroque
+
+## Complicaciones
+
+- Verificar los jaque, ya que cuando se le implemento el bloquear los movimento, no se podia seguir
+- Verificar si una pieza podria cubrir
+- Verificar si el rey podia escapar, todo eso se complico demadiado
+- Y las rutas, eso nunca puede faltar

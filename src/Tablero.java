@@ -1,9 +1,14 @@
+import javafx.animation.PauseTransition;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Tablero {
     private Pane Piezas;
@@ -14,10 +19,13 @@ public class Tablero {
     private int filaSeleccionada, colSeleccionada;
     private final List<ImageView> puntos = new ArrayList<>();
     private boolean turnoBlanco = true;
+    private Rectangle jaqueIndicator = null;
+    private Runnable onJaqueMate;
 
-    public Tablero(Pane Piezas, Label turnoLabel) {
+    public Tablero(Pane Piezas, Label turnoLabel, Runnable onJaqueMate) {
         this.Piezas = Piezas;
         this.turnoLabel = turnoLabel;
+        this.onJaqueMate = onJaqueMate;
         inicializarLogica();
         actualizarTurno();
     }
@@ -53,8 +61,8 @@ public class Tablero {
 
         pieza.setFitWidth(TAM);
         pieza.setFitHeight(TAM);
-        pieza.setLayoutX(140 + columna * TAM);
-        pieza.setLayoutY(137 + fila * TAM);
+        pieza.setLayoutX(138 + columna * TAM);
+        pieza.setLayoutY(138 + fila * TAM);
         pieza.setUserData(new int[]{fila, columna});
         pieza.setOnMouseClicked(e -> {
             int[] pos = (int[]) pieza.getUserData();
@@ -299,30 +307,64 @@ public class Tablero {
         ImageView punto = new ImageView(new Image(stream));
         punto.setFitWidth(20);
         punto.setFitHeight(20);
-        punto.setLayoutX(140 + columna * TAM + (TAM - 20) / 2.0);
-        punto.setLayoutY(137 + fila * TAM + (TAM - 20) / 2.0);
+        punto.setLayoutX(138 + columna * TAM + (TAM - 20) / 2.0);
+        punto.setLayoutY(138 + fila * TAM + (TAM - 20) / 2.0);
         punto.setOpacity(0.8);
         punto.setOnMouseClicked(e -> {
             String pieza = tablero[fO][cO];
             
-            if (
+            boolean movimientoValido = 
                 (("P".equals(pieza) || "p".equals(pieza)) && puedeMoverPeon(fO, cO, fila, columna)) ||
                 (("T".equals(pieza) || "t".equals(pieza)) && puedeMoverTorre(fO, cO, fila, columna)) ||
                 (("C".equals(pieza) || "c".equals(pieza)) && puedeMoverCaballo(fO, cO, fila, columna)) ||
                 (("A".equals(pieza) || "a".equals(pieza)) && puedeMoverAlfil(fO, cO, fila, columna)) ||
                 (("R".equals(pieza) || "r".equals(pieza)) && puedeMoverRey(fO, cO, fila, columna)) ||
-                (("Q".equals(pieza) || "q".equals(pieza)) && puedeMoverReina(fO, cO, fila, columna))
-            ) {
+                (("Q".equals(pieza) || "q".equals(pieza)) && puedeMoverReina(fO, cO, fila, columna));
+            
+            if (movimientoValido && !movimientoDejaEnJaque(fO, cO, fila, columna)) {
                 mover(fO, cO, fila, columna);
                 Audio.reproducirEfecto("/resources/audio/SonidoPiesa.mp3");
                 cambiarTurno();
-            }
+
+                if (estaEnJaque(turnoBlanco)) {
+                    marcarJaque();
+                    Audio.reproducirEfecto("/resources/audio/EstaJaque.mp3");
+                }
+                
+                // Verificar jaque mate después de hacer el movimiento
+                if(estaEnJaqueMate(turnoBlanco)) {
+                    limpiarPuntos();
+
+                    if (piezaSeleccionada != null) {
+                        piezaSeleccionada.setOpacity(1.0);
+                        piezaSeleccionada = null;
+                    }
+                    turnoLabel.setText("¡Jaque Mate! "+ (turnoBlanco ? "Blanco" : "Negro") + " pierde.");
+
+                    PauseTransition pause = new PauseTransition(Duration.seconds(2));
+                    pause.setOnFinished(event -> {  
+                        Audio.reproducirEfecto("/resources/audio/ganarNegra.mp3");
+                    if (onJaqueMate != null) {
+                        onJaqueMate.run();
+                    }
+                });
+                pause.play();
+                return;
+                } else {
+                    if (!estaEnJaque(turnoBlanco)) {
+                        limpiarJaque();
+                    }
+                }
             limpiarPuntos();
             if (piezaSeleccionada != null) {
                 piezaSeleccionada.setOpacity(1.0);
                 piezaSeleccionada = null;
             }
+            } else {
+                Audio.reproducirEfecto("/resources/audio/MovientoInvalido.mp3");
+            }
         });
+    
 
         puntos.add(punto);
         Piezas.getChildren().add(punto);
@@ -334,6 +376,32 @@ public class Tablero {
             Piezas.getChildren().remove(punto);
         }
         puntos.clear();
+    }
+
+    // Método para marcar el cuadrante del rey en rojo cuando está en jaque
+    private void marcarJaque() {
+        limpiarJaque();
+        int[] posRey = buscarRey(turnoBlanco);
+        if (posRey != null) {
+            int fila = posRey[0];
+            int col = posRey[1];
+            Rectangle rect = new Rectangle(TAM, TAM);
+            rect.setFill(javafx.scene.paint.Color.RED);
+            rect.setOpacity(0.5);
+            rect.setMouseTransparent(true);
+            rect.setLayoutX(138 + col * TAM);
+            rect.setLayoutY(138 + fila * TAM);
+            Piezas.getChildren().add(rect);
+            jaqueIndicator = rect;
+        }
+    }
+
+    // Método para limpiar el indicador de jaque
+    private void limpiarJaque() {
+        if (jaqueIndicator != null) {
+            Piezas.getChildren().remove(jaqueIndicator);
+            jaqueIndicator = null;
+        }
     }
 
     // Método para cambiar el turno entre jugadores
@@ -351,12 +419,12 @@ public class Tablero {
 
     // Método para remover una pieza visual del tablero después de un movimiento
     private void removerPiezaVisual(int fila, int columna) {
-        double x = 140 + columna * TAM;
-        double y = 137 + fila * TAM;
+        double x = 138 + columna * TAM;
+        double y = 138 + fila * TAM;
         List<ImageView> eliminar = new ArrayList<>();
         for (var nodo : Piezas.getChildren()) {
-            if (nodo instanceof ImageView iv && iv != piezaSeleccionada) {
-                if (iv.getLayoutX() == x && iv.getLayoutY() == y) {
+            if (nodo instanceof ImageView iv) {
+                if (Math.abs(iv.getLayoutX() - x) < 1 && Math.abs(iv.getLayoutY() - y) < 1 && iv != piezaSeleccionada) {
                     eliminar.add(iv);
                 }
             }
@@ -538,15 +606,133 @@ public class Tablero {
             : destino.equals(destino.toUpperCase());
     }
 
+    // Método para buscar la posición del rey en el tablero, lo cual es útil para verificar jaque o jaque mate
+    private int[] buscarRey(boolean blanco) {
+        String rey = blanco ? "R" : "r";
+        for (int f = 0; f < 8; f++) {
+            for(int c = 0; c < 8; c++){
+                if(rey.equals(tablero[f][c])){
+                    return new int[]{f, c};
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean estaEnJaque(boolean blanco) {
+        int[] posRey = buscarRey(blanco);
+        if (posRey == null) {
+            return false;
+        }
+        int fR = posRey[0];
+        int cR = posRey[1];
+
+        for (int f = 0; f < 8; f++) {
+            for (int c = 0; c < 8; c++) {
+                String pieza = tablero[f][c];
+                // Verificar si la pieza es del color contrario y si puede mover a la posición del rey
+                if (pieza != null && ((blanco && pieza.equals(pieza.toLowerCase())) || (!blanco && pieza.equals(pieza.toUpperCase())))) {
+                    if (
+                        (("P".equals(pieza) || "p".equals(pieza)) && puedeAtacar(f, c, fR, cR)) ||
+                        (("T".equals(pieza) || "t".equals(pieza)) && puedeMoverTorre(f, c, fR, cR)) ||
+                        (("C".equals(pieza) || "c".equals(pieza)) && puedeMoverCaballo(f, c, fR, cR)) ||
+                        (("A".equals(pieza) || "a".equals(pieza)) && puedeMoverAlfil(f, c, fR, cR)) ||
+                        (("R".equals(pieza) || "r".equals(pieza)) && puedeMoverRey(f, c, fR, cR)) ||
+                        (("Q".equals(pieza) || "q".equals(pieza)) && puedeMoverReina(f, c, fR, cR))
+                    ) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    private boolean puedeAtacar(int fO, int cO, int fD, int cD) {
+        String pieza = tablero[fO][cO];
+        if (pieza == null) {
+            return false;
+        }
+        if ("P".equals(pieza)) {
+            return (fD == fO - 1 && Math.abs(cD - cO) == 1);
+        }
+        if ("p".equals(pieza)) {
+            return (fD == fO + 1 && Math.abs(cD - cO) == 1);
+        } else if ("T".equals(pieza) || "t".equals(pieza)) {
+            return puedeMoverTorre(fO, cO, fD, cD);
+        } else if ("C".equals(pieza) || "c".equals(pieza)) {
+            return puedeMoverCaballo(fO, cO, fD, cD);
+        } else if ("A".equals(pieza) || "a".equals(pieza)) {
+            return puedeMoverAlfil(fO, cO, fD, cD);
+        } else if ("R".equals(pieza) || "r".equals(pieza)) {
+            return puedeMoverRey(fO, cO, fD, cD);
+        } else if ("Q".equals(pieza) || "q".equals(pieza)) {
+            return puedeMoverReina(fO, cO, fD, cD);
+        }
+        return false;
+    }
+
+    private boolean movimientoDejaEnJaque(int fO, int cO, int fD, int cD) {
+        String pieza = tablero[fO][cO];
+        String destino = tablero[fD][cD];
+
+        tablero[fD][cD] = pieza;
+        tablero[fO][cO] = null;
+
+        boolean esBlanca = pieza.equals(pieza.toUpperCase());
+
+        boolean enJaque = estaEnJaque(esBlanca);
+
+        tablero[fO][cO] = pieza;
+        tablero[fD][cD] = destino;
+
+        return enJaque;
+    }
+
+    // Método para verificar si el jugador actual está en jaque mate, lo que significa que su rey está en jaque y no tiene movimientos legales para salir de esa situación
+    private boolean estaEnJaqueMate(boolean blanco) {
+        if (!estaEnJaque(blanco)) {
+            return false;
+        }
+
+        for (int f = 0; f < 8; f++) {
+            for (int c = 0; c < 8; c++) {
+                String pieza = tablero[f][c];
+                if (pieza != null && ((blanco && pieza.equals(pieza.toUpperCase())) || (!blanco && pieza.equals(pieza.toLowerCase())))) {
+                    for (int fD = 0; fD < 8; fD++) {
+                        for (int cD = 0; cD < 8; cD++) {
+                            if(
+                                (("P".equals(pieza) || "p".equals(pieza)) && puedeMoverPeon(f, c, fD, cD)) ||
+                                (("T".equals(pieza) || "t".equals(pieza)) && puedeMoverTorre(f, c, fD, cD)) ||
+                                (("C".equals(pieza) || "c".equals(pieza)) && puedeMoverCaballo(f, c, fD, cD)) ||
+                                (("A".equals(pieza) || "a".equals(pieza)) && puedeMoverAlfil(f, c, fD, cD)) ||
+                                (("R".equals(pieza) || "r".equals(pieza)) && puedeMoverRey(f, c, fD, cD)) ||
+                                (("Q".equals(pieza) || "q".equals(pieza)) && puedeMoverReina(f, c, fD, cD))
+                            ){
+                                if (!movimientoDejaEnJaque(f, c, fD, cD)) {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     // Método para realizar el movimiento de una pieza en el tablero y actualizar la interfaz gráfica
     private void mover(int fO, int cO, int fD, int cD) {
+        //  PRIMERO eliminar la pieza enemiga
+        removerPiezaVisual(fD, cD);
+
+        // luego actualizar lógica
         tablero[fD][cD] = tablero[fO][cO];
         tablero[fO][cO] = null;
 
-        removerPiezaVisual(fD, cD);
-
-        piezaSeleccionada.setLayoutX(140 + cD * TAM);
-        piezaSeleccionada.setLayoutY(137 + fD * TAM);
+        // luego mover visual
+        piezaSeleccionada.setLayoutX(138 + cD * TAM);
+        piezaSeleccionada.setLayoutY(138 + fD * TAM);
         piezaSeleccionada.setUserData(new int[]{fD, cD});
     }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="rootPane"
+      prefHeight="337.0"
+      prefWidth="600.0"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="TU.PAQUETE.VentanaFinalController">
+
+   <children>
+      <ImageView fitHeight="337.0" fitWidth="600.0" preserveRatio="true">
+         <image>
+            <Image url="@/resources/image/FinDeLaPartida.gif"/>
+         </image>
+      </ImageView>
+
+      <Button fx:id="btnVolverJugar" layoutX="255.0" layoutY="199.0" style="-fx-background-color: transparent;" text="Volver a jugar">
+         <font>
+            <Font name="System Bold" size="13.0"/>
+         </font>
+      </Button>
+
+      <Button fx:id="btnMenu" layoutX="258.0" layoutY="232.0" style="-fx-background-color: transparent;" text="Salir al menu">
+         <font>
+            <Font name="System Bold" size="13.0"/>
+         </font>
+      </Button>
+
+   </children>
+</Pane>
