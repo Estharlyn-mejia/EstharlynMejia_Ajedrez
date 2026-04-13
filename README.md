@@ -89,24 +89,87 @@ Este proyecto implementa un juego de ajedrez con interfaz gráfica utilizando Ja
 - descarte la idea de ponerle un video final, eso ya no se va a hacer, me harte en verdad
 - las dirrecion se podrian ir al diablo, el rey de pobria ir al diblo, el enroque tambien.
 
-## Estudiante: Estharlyn Mejia Regalado (2023-0443)
+## Ajedrez - Black Clover Edition
 
-Juego: Ajedrez
-Descripción del juego:
-El proyecto consiste en una implementación completa y funcional del juego de Ajedrez desarrollada en Java con JavaFX, con una temática inspirada en el anime Black Clover.
-Esta versión incluye todas las reglas básicas del ajedrez y los movimientos especiales: enroque y coronación de peones. Además, cuenta con la correcta detección de jaque y jaque mate.
-El sistema permite jugar en modo Jugador vs Jugador (local), donde dos personas pueden enfrentarse en el mismo dispositivo.
-La interfaz gráfica está ambientada en el universo de Black Clover, utilizando imágenes, fondos y elementos visuales del anime para crear una experiencia inmersiva y atractiva. El tablero es totalmente interactivo, con piezas representadas mediante imágenes de alta calidad, resaltado de movimientos válidos y un sistema de turnos con validación en tiempo real.
-El código está estructurado utilizando programación orientada a objetos, aplicando buenos principios de diseño, manejo eficiente de eventos, separación clara entre la lógica del juego y la interfaz, y un diseño modular que facilita el mantenimiento y posibles expansiones.
-Controles:
-Para realizar un movimiento:
+**Estudiante:** Estharlyn Mejia Regalado (2023-0443)
 
-Haz clic izquierdo sobre una pieza de tu color (según el turno actual) para seleccionarla.
-Los movimientos válidos se resaltarán automáticamente con círculos rojos en las casillas disponibles.
-Haz clic izquierdo sobre una de las casillas resaltadas para realizar el movimiento.
-Puedes cancelar la selección haciendo clic en cualquier otra casilla que no esté resaltada.
+## 1. Descripción del proyecto
 
-En el juego están disponibles los botones:
+Este proyecto es una implementación del juego de **Ajedrez** con temática del anime **Black Clover**, desarrollado en **Java** utilizando **JavaFX** para la interfaz gráfica.
 
-Nueva Partida: Reinicia el juego actual.
-Volver al Menú: Regresa al menú principal.
+El juego permite a dos jugadores enfrentarse en modo **Jugador vs Jugador (local)** en el mismo dispositivo. Incluye todas las reglas básicas del ajedrez y los movimientos especiales: **enroque** y **coronación de peones**. Además, cuenta con detección visual y sonora de **jaque** y **jaque mate**.
+
+La interfaz está ambientada en el universo de Black Clover, con fondo animado, música temática y un diseño visual atractivo que mejora la experiencia del usuario.
+
+## 2. Funcionalidades implementadas
+
+### Funcionalidades completas:
+- Modo de juego **Jugador vs Jugador (local)**
+- Movimientos completos de todas las piezas (Peón, Torre, Caballo, Alfil, Reina y Rey)
+- Movimientos especiales:
+  - **Enroque** (corto y largo)
+  - **Coronación de peones** (se transforma automáticamente en Reina)
+- Detección de **jaque** con resaltado rojo y efecto de sonido
+- Detección de **jaque mate** con ventana final y video temático
+- Sistema de turnos con indicador visual
+- Resaltado de movimientos válidos con puntos rojos
+- Sonidos de fondo y efectos de movimiento
+- Botones de **Nueva Partida** y **Volver al Menú**
+- Pantalla de inicio con temática Black Clover
+- Ventana final al terminar la partida
+
+### Funcionalidades pendientes:
+- No se implementó modo contra Bot (solo 1 vs 1)
+
+## 3. Requisitos previos
+
+- **Java JDK** 21 o superior
+- **JavaFX SDK** 25.0.2 (o compatible)
+- IDE recomendado: **Visual Studio Code** con extensión de Java o **IntelliJ IDEA**
+
+## 4. Cómo ejecutar el proyecto
+
+### Desde Visual Studio Code (recomendado):
+
+1. Abrir la carpeta del proyecto en VS Code
+2. Asegurarse de que la configuración en `.vscode/launch.json` y `settings.json` esté correcta (ya incluida en el proyecto)
+3. Presionar `F5` o ir a **Run and Debug** → "Current File"
+4. También puedes ejecutar la clase principal: `App.java`
+
+### Configuración importante:
+El proyecto ya incluye las referencias a JavaFX en los archivos de configuración. Solo asegúrate de tener la ruta correcta de tu JavaFX SDK en:
+- `.vscode/settings.json`
+
+## 5. Estructura del proyecto
+
+- **`src/`** → Código fuente principal
+  - `App.java` → Clase principal que inicia la aplicación
+  - `Controller.java` → Controlador de la pantalla de inicio
+  - `Tablero.java` → Clase principal que contiene toda la lógica del juego (movimientos, jaque, enroque, coronación, etc.)
+  - `TableroController.java` → Controlador del tablero
+  - `Audio.java` → Manejo de música de fondo y efectos de sonido
+  - `VentanaFinalController.java` → Controlador de la pantalla final
+  - `VentanaVideoController.java` → Controlador del video al ganar
+
+- **`src/resources/`** → Recursos del juego
+  - `image/` → Imágenes de piezas, tablero y elementos de Black Clover
+  - `audio/` → Música de fondo y efectos de sonido
+  - `video/` → Video de victoria
+
+- **`FXML`** → Archivos de interfaz (VentanaInicio.fxml, Tablero.fxml, VentanaFinal.fxml, etc.)
+
+## 6. Decisiones de diseño
+
+- Se utilizó un enfoque **orientado a objetos** con una clase principal `Tablero` que maneja tanto la lógica del juego como la interacción con la interfaz.
+- Los movimientos de las piezas se validan en tiempo real con verificación de jaque para evitar movimientos ilegales.
+- Se separó la lógica de audio en una clase independiente (`Audio.java`) para facilitar su reutilización.
+- Se implementó el enroque y la coronación respetando las reglas oficiales del ajedrez.
+- Se priorizó una interfaz limpia y temática inspirada en **Black Clover** para mejorar la experiencia del usuario.
+
+## 7. Autor
+
+**Estharlyn Mejia Regalado**  
+Matrícula: 2023-0443  
+Fecha de entrega: Abril 2026
+
+---
