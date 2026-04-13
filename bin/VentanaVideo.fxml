@@ -6,37 +6,29 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VentanaFinalController" prefWidth="600.0" prefHeight="337.0">
+<Pane prefHeight="337.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VentanaFinalController">
 
     <children>
 
         <!-- Fondo (GIF o imagen) -->
-        <ImageView fitWidth="600.0" fitHeight="337.0" pickOnBounds="true">
+        <ImageView fitHeight="337.0" fitWidth="600.0" pickOnBounds="true">
             <image>
                 <!--  ASEGÚRATE de que esté en /resources/image/ -->
-                <Image url="@/image/FinDeLaPartida.gif"/>
+                <Image url="@resources/image/FinDeLaPartida.gif" />
             </image>
         </ImageView>
 
         <!-- Botón volver a jugar -->
-        <Button fx:id="btnVolverJugar"
-                layoutX="230.0"
-                layoutY="200.0"
-                text="Volver a jugar"
-                style="-fx-background-color: transparent; -fx-text-fill: white;">
+        <Button fx:id="btnVolverJugar" layoutX="230.0" layoutY="200.0" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Volver a jugar">
             <font>
-                <Font name="System Bold" size="14.0"/>
+                <Font name="System Bold" size="14.0" />
             </font>
         </Button>
 
         <!-- Botón menú -->
-        <Button fx:id="btnMenu"
-                layoutX="240.0"
-                layoutY="240.0"
-                text="Salir al menú"
-                style="-fx-background-color: transparent; -fx-text-fill: white;">
+        <Button fx:id="btnMenu" layoutX="240.0" layoutY="240.0" style="-fx-background-color: transparent; -fx-text-fill: white;" text="Salir al menú">
             <font>
-                <Font name="System Bold" size="14.0"/>
+                <Font name="System Bold" size="14.0" />
             </font>
         </Button>
 

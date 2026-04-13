@@ -1,12 +1,11 @@
-import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class TableroController {
 
@@ -14,39 +13,41 @@ public class TableroController {
     private Pane capaPiezas;
 
     @FXML
+    private Button btnReiniciar;
+
+    @FXML
+    private Button btnRendirse;
+
+    @FXML
     private Label turno;
+
+    private Tablero tablero;
 
     @FXML
     public void initialize() {
-        Tablero tablero = new Tablero(capaPiezas, turno, this::mostrarVentanaVideo);
+
+        tablero = new Tablero(capaPiezas, turno, this::mostrarVentanaFinal);
         tablero.inicializarPiezas();
+
+        btnReiniciar.setOnAction(e -> tablero.reiniciar());
+
+        btnRendirse.setOnAction(e -> tablero.rendirse());
     }
 
-    private void mostrarVentanaVideo() {
+    public void mostrarVentanaFinal() {
         try {
-            // ⏱ Espera 2 segundos
-            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/VentanaFinal.fxml"));
+            Parent root = loader.load();
 
-            pause.setOnFinished(e -> {
-                try {
-                    // 🔊 Audio CORRECTO (sin /resources)
-                    Audio.reproducirEfecto("/audio/ganarNegra.mp3");
+            Stage nueva = new Stage();
+            nueva.setScene(new Scene(root));
+            nueva.setTitle("Fin de la partida");
 
-                    // 🪟 Cambiar escena
-                    Stage stage = (Stage) turno.getScene().getWindow();
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/VentanaVideo.fxml"));
-                    Parent root = loader.load();
+            // cerrar ventana actual
+            Stage actual = (Stage) turno.getScene().getWindow();
+            actual.close();
 
-                    stage.setScene(new Scene(root));
-                    stage.setTitle("Chess Game");
-                    stage.centerOnScreen();
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
-
-            pause.play();
+            nueva.show();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,13 +3,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class VentanaFinalController {
-
-    @FXML
-    private Pane rootPane;
 
     @FXML
     private Button btnVolverJugar;
@@ -20,36 +16,36 @@ public class VentanaFinalController {
     @FXML
     public void initialize() {
 
-        // 🔁 Volver a jugar
-        btnVolverJugar.setOnAction(event -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/Tablero.fxml"));
-                Parent root = loader.load();
-
-                Stage stage = (Stage) btnVolverJugar.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Chess Game");
-                stage.centerOnScreen();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        btnVolverJugar.setOnAction(e -> {
+            System.out.println("Reiniciar juego");
+            abrirVentana("/Tablero.fxml", e);
         });
 
-        // 🏠 Volver al menú
-        btnMenu.setOnAction(event -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/VentanaInicio.fxml"));
-                Parent root = loader.load();
-
-                Stage stage = (Stage) btnMenu.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Chess Game");
-                stage.centerOnScreen();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        btnMenu.setOnAction(e -> {
+            System.out.println("Ir al menú");
+            abrirVentana("/VentanaInicio.fxml", e);
         });
+    }
+
+    private void abrirVentana(String ruta, javafx.event.ActionEvent e) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
+            Parent root = loader.load();
+
+            Stage nuevaVentana = new Stage();
+            nuevaVentana.setScene(new Scene(root));
+            nuevaVentana.show();
+
+            // cerrar ventana actual
+            cerrarVentana(e);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void cerrarVentana(javafx.event.ActionEvent e) {
+        Stage stage = (Stage) btnMenu.getScene().getWindow();
+        stage.close();
     }
 }
